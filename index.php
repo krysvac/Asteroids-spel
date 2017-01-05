@@ -2,7 +2,6 @@
 $title = "Hem";
 
 $styles_include = array();
-$styles_include[] = "kmom03_plugin/slider.css";
 $styles_include[] = "syntaxHighlight/default.css";
 
 require "include/header.php";
@@ -17,88 +16,89 @@ require "include/header.php";
                 
                 <hr>
 
-                <h2 class="text-subheader">Om</h2>
+                <h2>Om</h2>
                 <p>
                     Ett enkelt spel som går ut på att skjuta asteroider. De skapas på slumpade positioner och blir fler och fler för att öka svårigheten med tiden. Hur många poäng kan du få?
                 </p>
 
-                <h2 class="text-subheader">Ladda ner / Krav</h2>
+                <h2>Ladda ner / Krav</h2>
                 <p>
                     <a href="http://jquery.com/download/">jQuery</a> version 3.* eller högre <br>
-                    <a href="download/slider.rar">Slider</a>
+                    <a href="https://github.com/goldfire/CanvasInput">CanvasInput</a> 1.2.4 eller högre (För databashantering)<br>
+                    <a href="https://github.com/krysvac/Asteroids-spel/blob/master/js/modal.js">Modal</a> (För databashantering)<br>
+                    <a href="https://github.com/krysvac/Asteroids-spel/tree/master/js/game">Spelet</a>
                 </p>
 
-                <h2 class="text-subheader">Användning</h2>
-                <p>En slider med 2 bilder och knappar</p>
+                <h2>Konfigurering</h2>
+
+                <h3>Initierings-inställningar</h3>
+                <p>Det finns 6st variabler du kan skicka med när du initierar spelet, id till canvas, bredd, höjd, om den ska visa poäng, om den ska ha databas samt filen att skicka requests till om du har databas.</p>
+                <p>Om du vill visa poäng behöver du ha ett element med id gameScore tillgängligt.</p>
+                <p>Med databas väljer du också namnet på filen spelet skickar requests till. En request är ett json-objekt med attributen name och score.</p>
+                <p>Koden för att initiera spelet finns redan i game.js-filen</p>
+                
+                <h3>Utan databas</h3>
+                <p>Om du vill använda spelet utan att spara poängen i en databas behöver du endast inkludera spel-filerna boulders, game, logic, player, och projectiles.</p>
+                <p>Du initierar spelet med: </p>
                 <pre>
                     <code>
-&lt;div class="slider-container slider"&gt;
+$(document).ready(function()
+{
+    Asteroids.init("game", 1110, 600, true /* Visa eller dölja poäng */, false);
+    Asteroids.gameLoop();
+});</code>
+                </pre>
 
-    &lt;div class="items"&gt;
-        &lt;img src="img/slider/img-1.JPG" alt="img-1" class="active"&gt;
-        &lt;img src="img/slider/img-2.JPG" alt="img-2"&gt;
+                <h3>Med databas</h3>
+                <p>Om du vill använda spelet med en databas initierar du spelet så här: </p>
+                <pre>
+                    <code>
+$(document).ready(function()
+{
+    Asteroids.init("game", 1110, 600, true /* Visa eller dölja poäng */, true, "post.php");
+    Asteroids.gameLoop();
+});</code>
+                </pre>
+                <p>post.php är filen som spelet kommer skicka requests till, i form av ett json-objekt med attributen name och score. Spelet förväntar sig ett objekt med attributen msg och success tillbaka.</p>
+
+                <h2>Exempel</h2>
+                <pre>
+                    <code>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="sv"&gt;
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;link href="css/style.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class="container"&gt;
+
+    &lt;div class="row"&gt;
+        &lt;div class="box" id="modaldiv"&gt;
+            &lt;div class="col-lg-12" style="overflow-x: scroll;" id="gameWrapper"&gt;
+                &lt;h2 id="gameScore"&gt;&lt;/h2&gt;
+                &lt;canvas id="game" width='1110px' height='600'&gt;&lt;/canvas&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
 
-    &lt;div class="controls"&gt;
-        &lt;button id="slider-prev"&gt;&laquo;&lt;/button&gt;
-        &lt;button id="slider-prev"&gt;&raquo;&lt;/button&gt;
-    &lt;/div&gt;
+&lt;/div&gt;
 
-&lt;/div&gt;</code>
+    &lt;script src="js/jquery.js"&gt;&lt;/script&gt;
+    &lt;script src='js/modal.js'&gt;&lt;/script&gt;
+    &lt;script src='js/CanvasInput.js'&gt;&lt;/script&gt;
+    &lt;script src='js/game/logic.js'&gt;&lt;/script&gt;
+    &lt;script src='js/game/boulders.js'&gt;&lt;/script&gt;
+    &lt;script src='js/game/projectiles.js'&gt;&lt;/script&gt;
+    &lt;script src='js/game/player.js'&gt;&lt;/script&gt;
+    &lt;script src='js/game/game.js'&gt;&lt;/script&gt; //inits game among other things
+&lt;/body&gt;
+&lt;/html&gt;</code>
                 </pre>
-
-                <h2 class="text-subheader">Konfigurering</h2>
-                <p>Klassen slider-container är till css-filen, sätt den på varje container för att få rätt stil.</p>
-                <ul>
-                    <li><code>target</code> - Behållaren som pluginen använder för att hitta bilderna. (Standard: <code>.slider</code>)</li>
-                    <li><code>button</code> - Knapparna som pluginen använder, dessa läggs till som prefix till <code>-prev</code> and <code>-next</code>.
-                        Om värdet sätts som null kommer programmet inte använda några knappar. (Standard: <code>#slider</code>)</li>
-                    <li><code>interval</code> - Intervallen mellan bilder, satt i millisekunder. (Standard: <code>6500</code>)</li>
-                </ul>
-
-                <h2 class="text-subheader">Exempel</h2>
-                <p>Detta är 2 exempel som du kan använda för bildspel. Du kan ha flera stycken genom att ändra target-klassen till en annan.</p>
-
-                <h3 class="text-altsubheader">Standard med knappar</h3>
-                <div class="slider-container slider">
-                    <div class="items">
-                        <img src="img/slider/pic-1.JPG" alt="image 1" class="active">
-                        <img src="img/slider/pic-2.JPG" alt="image 2">
-                        <img src="img/slider/pic-3.JPG" alt="image 3">
-                    </div>
-
-                    <div class="controls">
-                        <button id="slider-prev"><span class="fa fa-arrow-left"></span></button>
-                        <button id="slider-next"><span class="fa fa-arrow-right"></span></button>
-                    </div>
-                </div>
-                <br>
-                <pre>
-                    <code>
-createSlider({
-    target: '.slider',
-    button: '#slider',
-    interval: 6500
-}).start();</code>
-                </pre>
-
-                <h3 class="text-altsubheader">Standard utan knappar</h3>
-                <div class="slider-container slider-no-buttons">
-                    <div class="items">
-                        <img src="img/slider/pic-1.JPG" alt="image 1" class="active">
-                        <img src="img/slider/pic-2.JPG" alt="image 2">
-                        <img src="img/slider/pic-3.JPG" alt="image 3">
-                    </div>
-                </div>
-                <br>
-                <pre>
-                    <code>
-createSlider({
-    target: '.slider',
-    button: null,
-    interval: 6500
-}).start();</code>
-                </pre>
+                <h2>
+                    <a href="http://www.student.bth.se/~jodu15/dbwebb-kurser/javascript/me/kmom10/game.php">Testa spelet</a>
+                </h2>
             </div>
         </div>
     </div>
@@ -109,8 +109,7 @@ createSlider({
 $CURRENTFILE = basename($_SERVER['PHP_SELF']);
 
 $scripts_include = array();
-$scripts_include[] = "kmom03_plugin/slider.js";
 $scripts_include[] = "syntaxHighlight.js";
-$scripts_include[] = "kmom03_plugin/init.js";
+$scripts_include[] = "syntax_init.js";
 require "include/footer.php";
 ?>

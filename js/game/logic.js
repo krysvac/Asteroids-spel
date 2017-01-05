@@ -81,6 +81,10 @@ function Vector(x, y) {
     this.y = y || 0;
 }
 
+function randomnumber(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 var gameOver = 0; //gamestate, 2 = loss
 var boulders = null;
 var score = 0;
