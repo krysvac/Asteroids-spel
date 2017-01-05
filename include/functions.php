@@ -5,7 +5,7 @@ function connect()
 {
     $db_dsn  = ($_SERVER['HTTP_HOST'] != 'localhost') ? "mysql:host=blu-ray.student.bth.se;dbname=jodu15" : "mysql:host=localhost;dbname=jodu15";
     $db_user = ($_SERVER['HTTP_HOST'] != 'localhost') ? "jodu15" : "root";
-    $db_pass = ($_SERVER['HTTP_HOST'] != 'localhost') ? "1+KC2eH." : "";
+    $db_pass = ($_SERVER['HTTP_HOST'] != 'localhost') ? "" : "";
     $pdo     = new PDO($db_dsn, $db_user, $db_pass, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
     return $pdo;
 }
